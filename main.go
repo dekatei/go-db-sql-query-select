@@ -1,7 +1,10 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
+
+	//"log"
 
 	_ "modernc.org/sqlite"
 )
@@ -21,7 +24,41 @@ func (s Sale) String() string {
 func selectSales(client int) ([]Sale, error) {
 	var sales []Sale
 
-	// напишите код здесь
+	/* напишите код здесь
+	В функции надо реализовать:
+	Подключение к БД
+	ыполнение SELECT-запроса
+	Заполнение массива в переменной sales объектами Sale, в которых будут данные из таблицы.
+	*/
+	db, err := sql.Open("sqlite", "demo.db")
+	if err != nil {
+		//log.Println(err)
+		return sales, err
+	}
+	defer db.Close()
+
+	rows, err := db.Query(`SELECT product, volume, date FROM sales WHERE client = :client`, sql.Named("client", client))
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		sale := Sale{}
+
+		err := rows.Scan(&sale.Product, &sale.Volume, &sale.Date)
+		if err != nil {
+			//log.Println(err)
+			return sales, err
+		}
+
+		sales = append(sales, sale)
+	}
+
+	if err := rows.Err(); err != nil {
+		//log.Println(err)
+		return nil, err
+	}
 
 	return sales, nil
 }

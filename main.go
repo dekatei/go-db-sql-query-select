@@ -64,7 +64,7 @@ func selectSales(client int) ([]Sale, error) {
 }
 
 func main() {
-	client := 208
+	client := 3
 
 	sales, err := selectSales(client)
 	if err != nil {
@@ -75,4 +75,62 @@ func main() {
 	for _, sale := range sales {
 		fmt.Println(sale)
 	}
+
+	/* //Добавление новой строки в таблицу
+	db, err := sql.Open("sqlite", "demo.db")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer db.Close()
+
+	product := "Облачное хранилище"
+	price := 300
+	// название продукта и цена передаются через параметры
+	res, err := db.Exec("INSERT INTO products (product, price) VALUES (:product, :price)",
+		sql.Named("product", product),
+		sql.Named("price", price))
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Println(res.LastInsertId())
+	fmt.Println(res.RowsAffected()*/
+
+	/* //Обновление информации
+	db, err := sql.Open("sqlite", "demo.db")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer db.Close()
+
+	productID := 1
+	price := 700
+	// обновление цены у продукта с заданным идентификатором
+	// цена и идентификатор передаются через параметры запроса
+	_, err = db.Exec("UPDATE products SET price = :price WHERE id = :id",
+		sql.Named("price", price),
+		sql.Named("id", productID))
+	if err != nil {
+		fmt.Println(err)
+		return
+	} */
+
+	/*//удаление из таблицы
+	db, err := sql.Open("sqlite", "demo.db")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer db.Close()
+
+	_, err = db.Exec("DELETE FROM sales WHERE client = :client", sql.Named("client", 3))
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	*/
+
 }
